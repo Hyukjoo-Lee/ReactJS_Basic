@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style>
+    html,
+    body {
+      font-family: Roboto;
+    }
+
+    .outer {
+      margin: auto;
+      width: auto;
+      height: 250px;
+      display: flex;
+    }
+
+    .inner {
+      background: rgb(120, 200, 246);
+      margin: auto;
+      margin-top: 40px;
+      width: 220px;
+      height: 330px;
+      text-align: center;
+      color: white
+    }
+
+    .btn-group {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="outer">
+    <div class="inner">
+    </div>
+  </div>
+</body>
+<script crossorigin src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- <link rel="stylesheet" href="style.css"> -->
+<script type="text/babel">
+
+  /*
+    Notice that you are using the jsx
+  */
+  /* 
+    1. 분을 초로, 초를 분으로 자동으로 변환하는 Converter 를 만들 것
+    2. state 활용
+    3. onChange function; one in charge of basically updating the data
+    4. flip & reset function
+    5. disabled property 활용
+  */
+
+  function MinuteToHours() {
+
+    const [amount, setAmount] = React.useState(0);
+    const [inverted, setInverted] = React.useState(false);
+
+    const onChange = (event) => {
+      /*console.log(event.target.value);*/
+      setAmount(event.target.value);
+    }
+
+
+    const reset = () => setAmount(0);
+
+    const onFlip = () => {
+      reset();
+      setInverted((current) => !current);
+    }
+
+    return (
+      <div>
+        <div class="form-group">
+          <label htmlFor="minutes">Minutes</label>
+          <input
+            // 조건부 연산자 '?' - 물음표 연산자
+            // condition ? val1 : val 2 => condition 이 true 면, val1 otherwise val2
+            // if is flipped, it shows converted value, other
+            value={inverted ? amount * 60 : amount}
+            id="minutes"
+            class="form-control"
+            placeholder="Minutes"
+            type="number"
+            onChange={onChange}
+            /* Make comparison */
+            disabled={inverted}
+          />
+        </div>
+        <div>
+          <label for="hours">Hours</label>
+          <input
+            value={inverted ? amount : Math.round(amount / 60)}
+            id="hours"
+            class="form-control"
+            placeholder="Hours"
+            type="number"
+            onChange={onChange}
+            disabled={!inverted} />
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-outline-primary" onClick={reset}>RESET</button>
+          <button type="button" class="btn btn-outline-primary" onClick={onFlip}>{inverted ? "TURN BACK" : "INVERT"}</button>
+        </div>
+      </div >
+    )
+  }
+
+  function KmToMiles() {
+
+    const [amount, setAmount] = React.useState(0);
+    const [inverted, setInverted] = React.useState(false);
+
+    const onChange = (event) => {
+      setAmount(event.target.value);
+    }
+
+
+    const reset = () => setAmount(0);
+
+    const onFlip = () => {
+      reset();
+      setInverted((current) => !current);
+    }
+
+    return (
+      <div>
+        <div class="form-group">
+          <label htmlFor="kilometer">Kilometer</label>
+          <input
+            value={inverted ? (amount * 0.62137).toFixed(2) : amount}
+            id="kilometre"
+            class="form-control"
+            placeholder="Kilometer"
+            type="number"
+            onChange={onChange}
+            disabled={inverted}
+          />
+        </div>
+        <div>
+          <label for="miles">Miles</label>
+          <input
+            value={inverted ? amount : (amount / 0.62137).toFixed(2)}
+            id="miles"
+            class="form-control"
+            placeholder="Miles"
+            type="number"
+            onChange={onChange}
+            disabled={!inverted} />
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-outline-primary" onClick={reset}>RESET</button>
+          <button type="button" class="btn btn-outline-primary" onClick={onFlip}>{inverted ? "TURN BACK" : "INVERT"}</button>
+        </div>
+      </div>
+    )
+  }
+
+  function App() {
+    const [index, setIndex] = React.useState("-1");
+    const onSelect = (event) => {
+      setIndex(event.target.value);
+    }
+
+    return (
+      <div>
+        <h1>Converter</h1>
+        <select value={index} onChange={onSelect}>
+          <option value="-1">Select your units</option>
+          <option value="0">Minute & Hours</option>
+          <option value="1">Km & Miles</option>
+        </select>
+        <hr />
+        {index === "-1" ? "Please select your units" : null}
+        {index === "0" ? <MinuteToHours /> : null}
+        {index === "1" ? <KmToMiles /> : null}
+      </div>
+    );
+  }
+
+  const root = document.querySelector(".inner");
+  ReactDOM.render(<App />, root);
+
+</script>
+
+</html>
